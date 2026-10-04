@@ -1,0 +1,605 @@
+{
+  "info": {
+    "name": "TaskFlow API - MongoDB Atlas & Mongoose",
+    "description": "Colección completa para TaskFlow API con múltiples equipos, usuarios (5 por equipo) y tareas variadas para demostrar paginación, orden, filtros y aggregation pipelines.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api" },
+    { "key": "teamId", "value": "6ac2a1ada7793c24fd4fb3c8" },
+    { "key": "teamId2", "value": "" },
+    { "key": "teamId3", "value": "" },
+    { "key": "userId", "value": "6ac2a1b4a7793c24fd4fb3c9" },
+    { "key": "userId2", "value": "" },
+    { "key": "userId3", "value": "" },
+    { "key": "taskId", "value": "6ac2a1bba7793c24fd4fb3ca" }
+  ],
+  "item": [
+    {
+      "name": "1. Equipos (/api/teams)",
+      "item": [
+        {
+          "name": "1.1 Crear Equipo 1 (Frontend Core - Ya existente)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Equipo de Desarrollo Frontend\",\n  \"description\": \"Equipo encargado de la interfaz en React\"\n}"
+            },
+            "url": "{{baseUrl}}/teams"
+          }
+        },
+        {
+          "name": "1.2 Crear Equipo 2 (Backend & Cloud)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data._id) {",
+                  "    pm.collectionVariables.set('teamId2', res.data._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Equipo de Backend & Cloud Services\",\n  \"description\": \"Arquitectura de microservicios, APIs y despliegue en la nube\"\n}"
+            },
+            "url": "{{baseUrl}}/teams"
+          }
+        },
+        {
+          "name": "1.3 Crear Equipo 3 (Diseño UI/UX & QA)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data._id) {",
+                  "    pm.collectionVariables.set('teamId3', res.data._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Equipo de Diseño UI/UX y Control de Calidad\",\n  \"description\": \"Diseño de prototipos, accesibilidad y pruebas automatizadas\"\n}"
+            },
+            "url": "{{baseUrl}}/teams"
+          }
+        },
+        {
+          "name": "Listar todos los equipos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/teams"
+          }
+        },
+        {
+          "name": "Obtener equipo por ID (Equipo 1)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/teams/{{teamId}}"
+          }
+        },
+        {
+          "name": "Actualizar equipo",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Equipo principal de aplicaciones web, móviles y SPA\"\n}"
+            },
+            "url": "{{baseUrl}}/teams/{{teamId}}"
+          }
+        },
+        {
+          "name": "Estadísticas del Equipo 1 (Aggregation Pipeline)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/teams/{{teamId}}/stats"
+          }
+        },
+        {
+          "name": "Estadísticas del Equipo 2 (Aggregation Pipeline)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/teams/{{teamId2}}/stats"
+          }
+        },
+        {
+          "name": "Eliminar equipo",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/teams/{{teamId3}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Usuarios (/api/users)",
+      "item": [
+        {
+          "name": "2.1 Crear Usuario 1 (Carlos - Ya creado en Equipo 1)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carlos Pérez\",\n  \"email\": \"carlos@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.2 Crear Usuario 2 (Sofía - Equipo 1 Frontend)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Sofía Gómez\",\n  \"email\": \"sofia@taskflow.com\",\n  \"role\": \"admin\",\n  \"team\": \"{{teamId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.3 Crear Usuario 3 (Alejandro - Equipo 1 Frontend)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alejandro Ruiz\",\n  \"email\": \"alejandro@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.4 Crear Usuario 4 (Valentina - Equipo 1 Frontend)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Valentina Díaz\",\n  \"email\": \"valentina@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.5 Crear Usuario 5 (Mateo - Equipo 1 Frontend)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mateo Torres\",\n  \"email\": \"mateo@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.6 Crear Usuario 6 (Laura - Líder Equipo 2 Backend)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data._id) {",
+                  "    pm.collectionVariables.set('userId2', res.data._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Laura Morales\",\n  \"email\": \"laura@taskflow.com\",\n  \"role\": \"admin\",\n  \"team\": \"{{teamId2}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.7 Crear Usuario 7 (Andrés - Equipo 2 Backend)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Andrés Castro\",\n  \"email\": \"andres@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId2}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.8 Crear Usuario 8 (Camila - Equipo 2 Backend)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Camila Vargas\",\n  \"email\": \"camila@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId2}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.9 Crear Usuario 9 (Diego - Equipo 2 Backend)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Diego Herrera\",\n  \"email\": \"diego@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId2}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.10 Crear Usuario 10 (Natalia - Equipo 2 Backend)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Natalia Ríos\",\n  \"email\": \"natalia@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId2}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.11 Crear Usuario 11 (Gabriel - Líder Equipo 3 QA/Diseño)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data._id) {",
+                  "    pm.collectionVariables.set('userId3', res.data._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gabriel Mendoza\",\n  \"email\": \"gabriel@taskflow.com\",\n  \"role\": \"admin\",\n  \"team\": \"{{teamId3}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.12 Crear Usuario 12 (Mariana - Equipo 3 QA/Diseño)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Mariana Silva\",\n  \"email\": \"mariana@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId3}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.13 Crear Usuario 13 (Fernando - Equipo 3 QA/Diseño)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Fernando Ortiz\",\n  \"email\": \"fernando@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId3}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.14 Crear Usuario 14 (Paula - Equipo 3 QA/Diseño)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Paula Castillo\",\n  \"email\": \"paula@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId3}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "2.15 Crear Usuario 15 (Lucas - Equipo 3 QA/Diseño)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lucas Navarro\",\n  \"email\": \"lucas@taskflow.com\",\n  \"role\": \"member\",\n  \"team\": \"{{teamId3}}\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "Listar todos los usuarios",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users"
+          }
+        },
+        {
+          "name": "Listar usuarios por Equipo 1",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users?team={{teamId}}"
+          }
+        },
+        {
+          "name": "Obtener usuario por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carlos Alberto Pérez\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": "{{baseUrl}}/users/{{userId}}"
+          }
+        },
+        {
+          "name": "Eliminar usuario",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/users/{{userId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Tareas (/api/tasks)",
+      "item": [
+        {
+          "name": "3.1 Crear Tarea 1 (Frontend - Ya existente)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Implementar autenticación en el Frontend\",\n  \"description\": \"Integrar formulario de login con el token JWT\",\n  \"status\": \"todo\",\n  \"priority\": 4,\n  \"team\": \"{{teamId}}\",\n  \"assignee\": \"{{userId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "3.2 Crear Tarea 2 (Frontend - Tablero Kanban)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Construir componente Kanban interactivo\",\n  \"description\": \"Permitir arrastrar y soltar tareas entre columnas\",\n  \"status\": \"in-progress\",\n  \"priority\": 5,\n  \"team\": \"{{teamId}}\",\n  \"assignee\": \"{{userId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "3.3 Crear Tarea 3 (Frontend - Modo Oscuro)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Soporte para tema oscuro (Dark Mode)\",\n  \"description\": \"Adaptar paleta de colores con Tailwind CSS\",\n  \"status\": \"done\",\n  \"priority\": 2,\n  \"team\": \"{{teamId}}\"\n}"
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "3.4 Crear Tarea 4 (Backend - Índices en MongoDB)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Optimizar índices de base de datos en Atlas\",\n  \"description\": \"Crear índices compuestos para agilizar búsquedas por status y team\",\n  \"status\": \"todo\",\n  \"priority\": 4,\n  \"team\": \"{{teamId2}}\",\n  \"assignee\": \"{{userId2}}\"\n}"
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "3.5 Crear Tarea 5 (Backend - Rate Limiting y Helmet)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Auditoría de seguridad y headers HTTP\",\n  \"description\": \"Revisar políticas de CORS, rate limiting y sanitización\",\n  \"status\": \"done\",\n  \"priority\": 3,\n  \"team\": \"{{teamId2}}\",\n  \"assignee\": \"{{userId2}}\"\n}"
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "3.6 Crear Tarea 6 (Backend - Caché con Redis)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Implementar capa de caché en consultas pesadas\",\n  \"description\": \"Almacenar en caché el resumen de estadísticas de equipos\",\n  \"status\": \"in-progress\",\n  \"priority\": 4,\n  \"team\": \"{{teamId2}}\"\n}"
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "3.7 Crear Tarea 7 (QA - Pruebas de integración E2E)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Automatizar pruebas de integración con Cypress\",\n  \"description\": \"Cubrir flujo completo de registro, login y creación de tareas\",\n  \"status\": \"todo\",\n  \"priority\": 5,\n  \"team\": \"{{teamId3}}\",\n  \"assignee\": \"{{userId3}}\"\n}"
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "3.8 Crear Tarea 8 (Diseño - Guía de Estilos Figma)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Diseño de sistema de diseño y componentes UI\",\n  \"description\": \"Entregar archivo de Figma con tipografías y botones\",\n  \"status\": \"done\",\n  \"priority\": 3,\n  \"team\": \"{{teamId3}}\",\n  \"assignee\": \"{{userId3}}\"\n}"
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "Listar todas las tareas (Sin filtros)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "Consulta Avanzada 1: Filtro status + Orden + Paginación (Página 1)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks?status=todo&sort=-priority&page=1&limit=5"
+          }
+        },
+        {
+          "name": "Consulta Avanzada 2: Filtro por Equipo + Paginación (Página 1)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks?team={{teamId}}&page=1&limit=3"
+          }
+        },
+        {
+          "name": "Consulta Avanzada 3: Búsqueda por texto (search)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks?search=autenticación"
+          }
+        },
+        {
+          "name": "Resumen Global de Tareas (Aggregation Pipeline general)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/stats/summary"
+          }
+        },
+        {
+          "name": "Obtener tarea por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/{{taskId}}"
+          }
+        },
+        {
+          "name": "Actualizar tarea (Marcar como terminada)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"done\",\n  \"priority\": 5\n}"
+            },
+            "url": "{{baseUrl}}/tasks/{{taskId}}"
+          }
+        },
+        {
+          "name": "Eliminar tarea",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/tasks/{{taskId}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Manejo de Errores",
+      "item": [
+        {
+          "name": "Error 400 - Formato de ID inválido",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/id-no-valido-123"
+          }
+        },
+        {
+          "name": "Error 400 - Validación fallida (campos obligatorios)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Falta el título y el equipo obligatorio\"\n}"
+            },
+            "url": "{{baseUrl}}/tasks"
+          }
+        },
+        {
+          "name": "Error 404 - Recurso no encontrado",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/tasks/660e1b2f4f1a250012345678"
+          }
+        },
+        {
+          "name": "Error 409 - Registro duplicado (email)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Carlos Duplicado\",\n  \"email\": \"carlos@taskflow.com\"\n}"
+            },
+            "url": "{{baseUrl}}/users"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Health Check",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:3000/health"
+          }
+        }
+      ]
+    }
+  ]
+}

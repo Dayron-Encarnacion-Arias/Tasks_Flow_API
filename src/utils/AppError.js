@@ -1,0 +1,12 @@
+// Error "operacional": uno que esperamos y queremos mostrarle al cliente
+// (a diferencia de un bug interno, que no queremos exponer).
+class AppError extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+    this.isOperational = true;
+    Error.captureStackTrace(this, this.constructor);
+  }
+}
+
+module.exports = AppError;
