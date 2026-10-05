@@ -202,28 +202,3 @@ docker-compose.yml            # Configuración para levantar MongoDB localmente
 TaskFlow.postman_collection.json # Colección de Postman completa
 README.md                     # Documentación oficial del proyecto
 ```
-
----
-
-## 🎥 Guía para el Video Explicativo (5 min)
-
-Para tu video de entrega, sigue esta pauta sugerida:
-
-1. **Introducción y Estructura (1 min):**
-   - Muestra la arquitectura en capas (`routes/`, `controllers/`, `models/`, `config/`).
-   - Explica el flujo de una petición: `Ruta -> Middleware -> Controlador -> Modelo (Mongoose) -> MongoDB Atlas`.
-2. **Flujo Principal en Postman / Thunder Client (2.5 min):**
-   - Crear un **Equipo** (`POST /api/teams`).
-   - Crear un **Usuario** vinculado a ese equipo (`POST /api/users`).
-   - Crear **Tareas** asignadas a ese equipo y usuario (`POST /api/tasks`).
-   - Listar las tareas (`GET /api/tasks`).
-   - Actualizar una tarea para marcarla como terminada (`PUT /api/tasks/:id` con `status: "done"`).
-   - Eliminar una tarea (`DELETE /api/tasks/:id`).
-3. **Manejo de Errores (45 seg):**
-   - Provocar un `400` pasando un ID con formato inválido o enviando campos requeridos vacíos.
-   - Provocar un `409` intentando crear un usuario con un email duplicado.
-4. **Consulta Avanzada (45 seg):**
-   - Ejecutar la consulta con filtros, orden y paginación: `GET /api/tasks?status=todo&sort=-priority&page=1&limit=10`.
-   - Mostrar el endpoint con Aggregation Pipeline: `GET /api/teams/:id/stats`.
-5. **Verificación en Base de Datos (30 seg):**
-   - Abrir **MongoDB Atlas** (o MongoDB Compass) y mostrar cómo quedaron guardados los documentos en las colecciones `users`, `teams` y `tasks`.
